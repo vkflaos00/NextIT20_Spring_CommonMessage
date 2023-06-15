@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+	
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	
+	<bean id="xmlAspect" class="kr.or.nextit.common.aop.XmlAspect"></bean>
+	
+	
+<!--aop:config expression 적용 예시
+	execution( * aspects.trace.demo.*.*(..))" 
+		* : Any return type
+		package : aspects.trace.demo
+		* : class
+		* : method
+		(..) : Any type and number of arguments	
+
+	execution( * hello(..))
+		hello 라는 이름을 가진 메서드를 선정한는 것이며 모든 파라미터를 허용한다.
+		
+	executino( * hello())
+		파라미터 패턴이 ()으로 되어 있으니 hello 메서드 중에서 파라미터가 없는 것만 선택한다.
+		
+	execution( * myspring.user.service.UserServiceImpl.*(..))
+		myspring.user.service.UserServiceImpl 클래스를 직접 지정하여 이 클래스가 
+		가진 모든 메서드를 선택한다.
+
+	execution( * myspring.user.service.*.*(..))
+		myspring.user.service 패키지의 모든 클래스에 적용된다 하지만 서브 패키지의
+		 클래스는 포함되지 않는다.
+		
+	execution( * myspring.user.service..*.*(..))
+		myspring.user.service 패키지의 모든 클래스에 적용된다  
+		그리고 '..'을 사용해서 서브 패키지의 모든 클래스 까지 포함 된다.
+	
+	execution( * *..Target.*(..))
+		패키지에 상관없이 Target이라는 이름의 모든 클래스에 적용된다. 
+		따라서 다른 패키지에 같은 이름의 클래스가 있어도 적용된다.
+ -->	
+<!-- 	<aop:config>
+		<aop:pointcut id="getPointcut" 
+			expression="execution(public * kr.or.nextit.member.service.*.*(..))"/>
+		 <aop:aspect ref="xmlAspect">
+			<aop:before method="beforeLog" pointcut-ref="getPointcut" />
+		</aop:aspect>
+		<aop:aspect ref="xmlAspect">
+			<aop:before method="afterLog" pointcut-ref="getPointcut" />
+		</aop:aspect>
+	</aop:config>    -->
+
+	<!-- <aop:config>
+		<aop:pointcut id="getPointcut" 
+			expression="execution(public * kr.or.nextit.member.service.*.*(..))"/>
+		<aop:aspect ref="xmlAspect">
+			<aop:around method="aroundLog" pointcut-ref="getPointcut"/>
+		</aop:aspect>
+	</aop:config>	 -->
+
+	<!--@Aspect 어노테이션이 적용된 Bean을 Aspect로 사용하기 위해서   -->
+	<aop:aspectj-autoproxy/>
+ 
+</beans>

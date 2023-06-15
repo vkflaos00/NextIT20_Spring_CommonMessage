@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	<!--mvc:annotation-driven
+		사용자 요청 url을 @Controller로 보내서 처리하기 위해 필요한 HanderMapping 
+			과 HandlerAdapter를 Bean으로 등록해준다.			
+		HanderMapping : HTTP 요청정보를 이용해서 컨트롤러를 찾아주는 기능을 합니다.
+			( 즉 사용자 요청 url과 매칭되는 컨트롤러를 찾아 주는 일을 함)
+			
+		HandlerAdapter : HanderMapping을 통해서 찾은 컨트롤러를 직접 실행하는 기능을 수행합니다.
+		
+		또한 컨트롤러(@Controller)에서 @RequestMapping 과 같은 어노테이션을 통해 해당 기능을 
+			사용할수 있도록 처리해 줍니다. 	
+	  -->
+	<annotation-driven />
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!--resources는 해장 자원에대한 경로를 처리합니다. 
+		( 현재 web.xml에서 모든요청("/")을 서블릿이 처리 하므로 css, image 같은
+			서블릿이 처리 하지 않아도 되는 것에 대해서 따로 패스를 지정해주어야 합니다.   -->
+	<resources mapping="/resources/**" location="/resources/" />
+	<resources mapping="/images/**" location="/images/" />
+	<resources mapping="/css/**" location="/css/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	
+	<!--InternalResourceViewResolver는 뷰리저버이며 prefix 와 suffix를 사용하여 
+		경로를 편히 작성할 수 있도록 해줍니다.ㅣ  -->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="kr.or.nextit"  
+	use-default-filters="false">
+		<context:include-filter type="annotation" 
+			expression="org.springframework.stereotype.Controller"/>
+	</context:component-scan>
+	
+	
+<!-- 	<beans:bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource" 
+		destroy-method="close">
+		<beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<beans:property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe"/>
+		<beans:property name="username" value="jsp"/>
+		<beans:property name="password" value="oracle"/>
+		<beans:property name="defaultAutoCommit" value="true"/>
+	</beans:bean>
+	<beans:bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	  <beans:property name="dataSource" ref="dataSource" />
+	  <beans:property name="mapperLocations" value="classpath:/mybatis/mapper/*.xml" />
+	  <beans:property name="configLocation"  value="classpath:/mybatis/mybatis-config.xml" />
+	</beans:bean>
+	
+	<mybatis-spring:scan base-package="kr.or.nextit" annotation="org.apache.ibatis.annotations.Mapper"/>
+	 -->
+	
+	<aop:aspectj-autoproxy/>
+	
+	
+	<interceptors>
+		<interceptor>
+			<!-- <mapping path="/member/*"/>
+			<exclude-mapping path="/member/memberRegister"/>		
+			<exclude-mapping path="/member/memberView"/>
+			<exclude-mapping path="/member/memberEdit"/>
+			<exclude-mapping path="/member/memberModify"/>
+			<exclude-mapping path="/member/memberDelete"/> -->
+			
+			<mapping path="/member/memberList"/>
+			<mapping path="/member/memberMultiDelete"/>
+			<mapping path="/member/memberRole"/>
+			<mapping path="/member/memberRoleUpdate"/>
+			<beans:bean class="kr.or.nextit.common.util.NextITRoleCheckIntercepter"></beans:bean>
+		</interceptor>
+		
+		
+		<interceptor>
+			<mapping path="/free/freeHide"/>
+			<beans:bean class="kr.or.nextit.common.util.NextITRoleCheckIntercepter"></beans:bean>
+		</interceptor>
+	
+	</interceptors>
+	
+	
+	
+	
+	
+	
+	
+	
+</beans:beans>

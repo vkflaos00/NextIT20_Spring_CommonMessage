@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.or.nextit.reply.mapper.IReplyMapper">
+  
+<insert id="replyRegister" parameterType="ReplyVO">
+	INSERT INTO reply(
+		re_no
+		,re_category
+		,re_parent_no
+		,re_mem_id
+		,re_content
+		,re_ip
+		,re_reg_date
+	)values(
+		seq_reply.nextval
+		,#{reCategory}
+		,#{reParentNo}
+		,#{reMemId}
+		,#{reContent}
+		,#{reIp}
+		,sysdate
+	)
+	
+</insert>
+
+<select id="getTotalRowCount" parameterType="ReplyPagingVO" 
+	resultType="int">
+	select
+		count(*)
+	from
+		reply
+	where
+		re_category = #{reCategory}
+		and re_parent_no = #{reParentNo} 
+</select>
+
+
+
+<select id="getReplyListByParent" parameterType="ReplyPagingVO"
+	resultType="ReplyVO">
+	select
+		b.*
+	from
+		(select 
+			rownum as rnum
+			, a.*
+		from(
+				select
+					re_no
+					,re_category
+					,re_parent_no
+					,re_mem_id
+					,re_content
+					,re_ip
+					,re_reg_date
+				from
+					reply
+				where
+					re_category = #{reCategory}
+					and re_parent_no = #{reParentNo}
+				order by re_no ) a
+		order by rnum desc)b
+	where rnum  between #{lastRow} and #{firstRow}
+</select>	
+
+
+<delete id="replyDelete" parameterType="ReplyVO">
+	delete
+	from 
+		reply
+	where
+		re_no = #{reNo}
+		and re_mem_id = #{reMemId}
+
+</delete>
+
+
+
+
+<update id="replyUpdate" parameterType="ReplyVO">
+	update reply set 
+		re_content = #{reContent}
+		,re_mem_id = #{reMemId}
+		,re_ip = #{reIp} 
+	where re_no = #{reNo}
+</update>
+
+
+
+</mapper>

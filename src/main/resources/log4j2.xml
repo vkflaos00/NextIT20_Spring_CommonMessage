@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+  <Appenders>
+    <Console name="Console" target="SYSTEM_OUT">
+      <PatternLayout pattern="%d{yyyy-MM-dd hh:mm:ss} [ %C , line : %L , Method : %M ] : %m%n"/>
+    </Console>
+    
+	<!-- <RollingFile name ="LogToFile01">
+		<FileName>/home/ssam/tools/log4j2/mylog.log</FileName>
+		<FilePattern>/home/ssam/tools/log4j2/%d{yyyy-MM-dd-hh-mm}/mylog.zip</FilePattern>
+		<PatternLayout>
+		    <Pattern>%d{yyyy-MM-dd hh:mm:ss} [ %C , line : %L , Method : %M ] : %m%n</Pattern>
+		</PatternLayout>
+		<Policies>
+		    <TimeBasedTriggeringPolicy interval = "1" modulate = "true"/>
+        </Policies>
+	</RollingFile> -->
+    
+    
+  </Appenders>
+  
+
+  <!--Root는 일반적인 로그 정책에 대해 정의를 할 수 있으며, 반드시 한개를 정의해야한다.  -->
+  <!--logger는 여러개 정의를 할수 있으며 name에 정의하는 패키지 범위를 설정 할 수 있다.  -->
+  <Loggers>
+  
+<!--  kr.or.nextit.code 패키지 하위는 로그 레벨을 info 으로 설정하고  additivity="false"는 다른 것들과 중첩되지 않게 출력하기-->
+    <Logger name="kr.or.nextit.code" level="info" additivity="false">
+      <AppenderRef ref="Console"/>
+<!-- 적용할 AppenderRef 추가하기 -->
+      <!-- <AppenderRef ref="LogToFile01"/> -->
+    </Logger>
+
+<!--  kr.or.nextit 하위는 info레벨로 로그 출력하기   -->
+	<Logger name="kr.or.nextit" level="info" additivity="false">
+		<AppenderRef ref="Console"/>	
+	</Logger>
+
+
+	<logger name="org.springframework.core" level="info">
+		<AppenderRef ref="Console"/>
+	</logger>
+	
+	<logger name="org.springframework.beans" level="info">
+		<AppenderRef ref="Console"/>
+	</logger>
+	
+	<logger name="org.springframework.context" level="info">
+		<AppenderRef ref="Console"/>
+	</logger>
+
+	<logger name="org.springframework.web" level="info">
+		<AppenderRef ref="Console"/>
+	</logger>
+
+
+    <Root level="error">
+      <AppenderRef ref="Console"/>
+    </Root>
+
+  </Loggers>
+</Configuration>
